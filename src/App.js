@@ -9,9 +9,11 @@ import LCabi from "./contracts/LCabi";
 class App extends Component {
   constructor() {
     super();
-    this.LCManager = LCManager;
 
-    this.appName = "BANK";
+    this.LCManager = LCManager;
+    this.LCabi = LCabi;
+
+    this.appName = "Bank";
     this.closeTab = this.closeTab.bind(this);
     this.resetApp = this.resetApp.bind(this);
     this.viewLC = this.viewLC.bind(this);
@@ -285,7 +287,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    let account;
+    var account;
 
     if (window.ethereum) {
       const ethereum = window.ethereum;
@@ -295,6 +297,8 @@ class App extends Component {
       ethereum.enable().then((accounts) => {
         this.web3.eth.defaultAccount = accounts[0];
         account = accounts[0];
+
+        let app = this;
 
         this.setState({
           account,
