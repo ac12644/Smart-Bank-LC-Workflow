@@ -20,7 +20,7 @@ function BankLogin(props) {
             className="button is-medium is-primary is-6"
             onClick={() => props.BankSessionCreate()}
           >
-            GreenGables Bank
+            Bank
           </span>
         </div>
 
