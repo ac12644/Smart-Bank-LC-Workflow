@@ -4,16 +4,33 @@ This repository contains a set of smart contracts and a React app that demonstra
 
 ## Table of Contents
 
-1. Introduction
-2. Smart Contracts
-3. React App
-4. Getting Started
-5. Usage
-6. Contributing
+1. Overview
+2. Components
+3. Smart Contracts
+4. React App
+5. Getting Started
+6. Usage
+7. Contributing
 
-## Introduction
+## Overview
 
-The letter of credit (LC) process is a common financial instrument used in international trade transactions. It involves three participants: the Buyer, the Seller, and a bank, which acts as the intermediary. The Buyer needs to purchase goods from the Seller but does not have the funds to do so. The bank extends a line of credit to the Buyer, and an LC is issued to formalize the process.
+The workflow involves the use of smart contracts to automate the LC process, reduce the risk of fraud, and ensure that all parties involved in the transaction are held accountable. The following steps are taken to set up the LC workflow:
+
+1. Develop, compile, and deploy the USD asset contract, which represents USD as a fungible asset using the ERC20 contract standard.
+2. Retrieve the address of the USD token and map it to the LC Manager and LetterOfCredit smart contracts. This address enables the invocation of the USD smart contract for transferring funds.
+3. Create the LC Manager and LetterOfCredit smart contracts. We deploy the LC Manager contract to the blockchain, and the LetterOfCredit smart contract is only used as an interface by the LC Manager. It is imported as part of the LC Manager code and is not deployed using hardhat. All new LCs are created through this interface.
+4. Deploy the LC Manager smart contract.
+5. Design a React application for generating, viewing, and settling LCs.
+6. Run and test the application.
+
+## Components
+
+This repository contains the following components:
+
+- `contracts/`: Contains the solidity smart contract files for the USD Token, LC Manager, and LetterOfCredit.
+- `scripts/`: Contains the deployment script for deploying the contracts to the blockchain.
+- `src/`: Contains the React application files.
+- `test/`: Contains the tests for the smart contracts.
 
 ## Smart Contracts
 
@@ -26,6 +43,28 @@ The smart contracts used in this project include a USD token contract, an LC Man
 - The LC contract represents a single LC and contains all the details of the transaction, including the parties involved, the value of the LC, and the terms of the transaction.
 
 ## React App
+
+LC Module React App
+The React app provides a frontend layer for interacting with the smart contracts, and has the following users and features:
+
+- `Bank`: The bank user who logs in to the app. The user can create and view LCs.
+- `Buyer`: The buying merchant who requests an LC from the bank. The Buyer can view all the LCs issued in their name by the bank.
+- `Seller`: The selling merchant who will approach the bank for settlement, on the successful delivery of their goods to the buying merchant. The Seller can view the LCs that include them as a beneficiary and submit a settlement request.
+
+The app has the following React components:
+
+- `Address Bar`: Displays the account used to access the app in real-time.
+- `Description`: Provides a description of the app.
+- `Nav`: Implements a navigation bar, with the bank's name and logo.
+- `InputField`: Implements the input fields used for getting inputs from the user.
+- `Container`: Links the main App.js file and the rest of the child components. It renders child components based on the current state. It receives all state variables and methods and forwards them to the child components, as and when required.
+- `Bank Login`: A login screen for our bank. It allows the Buyer, the Seller, and the bank to log in to the app and use it. It also redirects them to the lower screens, for using the app.
+- `BankTabCreate`: Renders the Create LC screen for the bank user.
+- `BankTabView`: Renders the View LC screen for the bank user.
+- `BuyerTabView`: Renders the View LC screen for the Buyer.
+- `SellerTabSettle`: Renders the Settle LC screen for the Seller.
+- `SellerTabView`: Renders the View LC screen for the Seller.
+- `LCView`: Renders a singular screen, with all the details of a single LC. It can be accessed by the bank user, the Buyer, or the Seller.
 
 The React app provides a basic interface for interacting with the smart contracts. It allows the Bank, Buyer, and Seller to perform their respective roles in the LC process.
 
