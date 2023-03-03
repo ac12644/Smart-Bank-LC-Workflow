@@ -1,6 +1,6 @@
 # Smart Contract Letter of Credit Module
 
-This repository contains a set of smart contracts and a React app that demonstrate how blockchain technology can be used to streamline the letter of credit (LC) process in international trade transactions. The smart contracts include a USD token contract, an LC Manager contract, and an LC contract, which automate the LC workflow, reduce the risk of fraud, and ensure accountability for all parties involved in the transaction. The React app provides a user-friendly interface for interacting with the smart contracts and allows the Bank, Buyer, and Seller to perform their respective roles in the LC process.
+This repository contains a set of smart contracts and a React app that demonstrate how blockchain technology can be used to streamline the letter of credit (LC) process in international trade transactions. The smart contracts include a USD token contract, an LC Manager contract, and an LC contract, which automate the LC workflow, reduce the risk of fraud, and ensure accountability for all parties involved in the transaction. The React app provides a user-friendly interface for interacting with the smart contracts and allows the Bank, Buyer, and Seller to perform their respective roles in the LC process. For more detailed instructions, check out the article on [Medium](https://medium.com/better-programming/building-enterprise-grade-workflows-with-smart-contracts-on-blockchain-6fa559a8110).
 
 ## Table of Contents
 
@@ -86,7 +86,7 @@ npm install
 
 3. Deploy the smart contracts on your local blockchain network (e.g., Polygon Mumbai)
 
-For more detailed instructions, check out the [article](https://github.com/ac12644).
+For more detailed instructions, check out the [article](https://medium.com/better-programming/building-enterprise-grade-workflows-with-smart-contracts-on-blockchain-6fa559a8110).
 
 ## Usage
 
