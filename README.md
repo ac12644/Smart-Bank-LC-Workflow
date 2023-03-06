@@ -1,3 +1,11 @@
+<!-- PROJECT SHIELDS -->
+
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
+
 # Smart Contract Letter of Credit Module
 
 This repository contains a set of smart contracts and a React app that demonstrate how blockchain technology can be used to streamline the letter of credit (LC) process in international trade transactions. The smart contracts include a USD token contract, an LC Manager contract, and an LC contract, which automate the LC workflow, reduce the risk of fraud, and ensure accountability for all parties involved in the transaction. The React app provides a user-friendly interface for interacting with the smart contracts and allows the Bank, Buyer, and Seller to perform their respective roles in the LC process. For more detailed instructions, check out the article on [Medium](https://medium.com/better-programming/building-enterprise-grade-workflows-with-smart-contracts-on-blockchain-6fa559a8110).
@@ -102,3 +110,15 @@ Contributions to the project are welcome. To contribute, follow these steps:
 4. Commit your changes (`git commit -m 'Add new feature'`)
 5. Push to the branch (`git push origin feature/new-feature`)
 6. Open a pull request
+
+
+[forks-shield]: https://img.shields.io/github/forks/ac12644/Smart-Bank-LC-Workflow?style=for-the-badge
+[forks-url]: https://github.com/ac12644/Smart-Bank-LC-Workflow/network/members
+[stars-shield]: https://img.shields.io/github/stars/ac12644/Smart-Bank-LC-Workflow?style=for-the-badge
+[stars-url]: https://github.com/ac12644/Smart-Bank-LC-Workflow/stargazers
+[issues-shield]: https://img.shields.io/github/issues/ac12644/Smart-Bank-LC-Workflow?style=for-the-badge
+[issues-url]: https://github.com/ac12644/Smart-Bank-LC-Workflow/issues
+[license-shield]: https://img.shields.io/github/license/ac12644/Smart-Bank-LC-Workflow?style=for-the-badge
+[license-url]: https://github.com/ac12644/Smart-Bank-LC-Workflow/blob/main/LICENSE
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://www.linkedin.com/in/ac12644/
