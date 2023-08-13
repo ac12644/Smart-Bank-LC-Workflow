@@ -5,10 +5,18 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
+[![Follow on GitHub][github-shield]][github-url]
 
-# Smart Contract Letter of Credit Module
+# 📜 Smart Contract Letter of Credit Module
 
-This repository contains a set of smart contracts and a React app that demonstrate how blockchain technology can be used to streamline the letter of credit (LC) process in international trade transactions. The smart contracts include a USD token contract, an LC Manager contract, and an LC contract, which automate the LC workflow, reduce the risk of fraud, and ensure accountability for all parties involved in the transaction. The React app provides a user-friendly interface for interacting with the smart contracts and allows the Bank, Buyer, and Seller to perform their respective roles in the LC process. For more detailed instructions, check out the article on [Medium](https://medium.com/better-programming/building-enterprise-grade-workflows-with-smart-contracts-on-blockchain-6fa559a8110).
+This repository demonstrates how smart contracts and blockchain can revolutionize traditional financial instruments like the letter of credit (LC) in international trade transactions. Leveraging the immutable and transparent nature of blockchain, the included smart contracts and React app aim to streamline the LC process, reducing both potential errors and fraud risks.
+
+The project consists of:
+
+- Smart Contracts: USD token contract, LC Manager contract, and an LC contract.
+- React App: An interactive user interface to facilitate operations on these smart contracts for various roles like the bank, buyer, and seller.
+
+For a deeper dive into the underlying concepts and motivations, read [Medium](https://medium.com/better-programming/building-enterprise-grade-workflows-with-smart-contracts-on-blockchain-6fa559a8110).
 
 ## Table of Contents
 
@@ -20,16 +28,26 @@ This repository contains a set of smart contracts and a React app that demonstra
 6. Usage
 7. Contributing
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ## Overview
 
-The workflow involves the use of smart contracts to automate the LC process, reduce the risk of fraud, and ensure that all parties involved in the transaction are held accountable. The following steps are taken to set up the LC workflow:
+This module focuses on the LC process, traditionally involving three key players: the buyer, the seller, and the bank. The bank acts as a mediator, extending credit to the buyer while guaranteeing payment to the seller once conditions are met. By employing smart contracts, we've managed to encapsulate and automate this process in a decentralized manner.
 
-1. Develop, compile, and deploy the USD asset contract, which represents USD as a fungible asset using the ERC20 contract standard.
-2. Retrieve the address of the USD token and map it to the LC Manager and LetterOfCredit smart contracts. This address enables the invocation of the USD smart contract for transferring funds.
-3. Create the LC Manager and LetterOfCredit smart contracts. We deploy the LC Manager contract to the blockchain, and the LetterOfCredit smart contract is only used as an interface by the LC Manager. It is imported as part of the LC Manager code and is not deployed using hardhat. All new LCs are created through this interface.
-4. Deploy the LC Manager smart contract.
-5. Design a React application for generating, viewing, and settling LCs.
-6. Run and test the application.
+The steps to set up the LC workflow include:
+
+1. Developing and deploying the USD asset contract as a fungible asset using the ERC20 standard.
+2. Linking the USD token with the LC Manager and LetterOfCredit smart contracts.
+3. Setting up and deploying the LC Manager contract.
+4. Creating a user-friendly React application to handle LCs.
+5. Running and evaluating the entire setup.
+
+<img src="images/Prev1.png" width="45%"></img>
+<img src="images/Prev2.png" width="45%"></img>
+<img src="images/Prev3.png" width="45%"></img>
+<img src="images/Prev4.png" width="45%"></img>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Components
 
@@ -49,6 +67,8 @@ The smart contracts used in this project include a USD token contract, an LC Man
 - The LC Manager contract is responsible for creating new LCs, managing their lifecycle, and ensuring that all parties involved in the transaction are held accountable.
 
 - The LC contract represents a single LC and contains all the details of the transaction, including the parties involved, the value of the LC, and the terms of the transaction.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## React App
 
@@ -76,6 +96,7 @@ The app has the following React components:
 
 The React app provides a basic interface for interacting with the smart contracts. It allows the Bank, Buyer, and Seller to perform their respective roles in the LC process.
 
+<p align="right">(<a href="#top">back to top</a>)</p>
 ## Getting Started
 
 To get started with the project, follow these steps:
@@ -94,7 +115,25 @@ npm install
 
 3. Deploy the smart contracts on your local blockchain network (e.g., Polygon Mumbai)
 
-For more detailed instructions, check out the [article](https://medium.com/better-programming/building-enterprise-grade-workflows-with-smart-contracts-on-blockchain-6fa559a8110).
+```
+npx hardhat run scripts/deploy.js --network mumbai
+```
+
+4. Update the ABIs
+
+After deploying your contracts, you'll need to replace the existing ABIs in the project with the ones from your deployed contracts. You can retrieve the new ABIs from the `artifacts/contracts` directory.
+
+- For the LetterOfCredit contract, replace the ABI in `src/contracts/LCabi.js` with the ABI of your deployed contract.
+
+- For the LCManager contract, replace the ABI in `src/contracts/LCManager.js` with the ABI of your deployed contract.
+
+5. Run the app:
+
+```
+npm start
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Usage
 
@@ -111,6 +150,7 @@ Contributions to the project are welcome. To contribute, follow these steps:
 5. Push to the branch (`git push origin feature/new-feature`)
 6. Open a pull request
 
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 [forks-shield]: https://img.shields.io/github/forks/ac12644/Smart-Bank-LC-Workflow?style=for-the-badge
 [forks-url]: https://github.com/ac12644/Smart-Bank-LC-Workflow/network/members
@@ -122,3 +162,5 @@ Contributions to the project are welcome. To contribute, follow these steps:
 [license-url]: https://github.com/ac12644/Smart-Bank-LC-Workflow/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/ac12644/
+[github-shield]: https://img.shields.io/github/followers/ac12644?label=Follow&style=for-the-badge
+[github-url]: https://github.com/ac12644
