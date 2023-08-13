@@ -40,10 +40,12 @@ contract LCManager {
         bytes2 Stat
     );
 
-    constructor() public payable {
-        owner = msg.sender;
-        LCDoc.length = 1;
-    }
+  constructor(address _erc20Address) public payable {
+    owner = msg.sender;
+    ERC20Interface = ERC20(_erc20Address); // _erc20Address: USD Token Contract Address
+    LCDoc.length = 1;
+}
+
 
     modifier onlyOwner() {
         if (msg.sender != owner) revert();
@@ -63,11 +65,10 @@ contract LCManager {
             Amt,
             now,
             DOE,
-            owner
+            owner,
+            address(ERC20Interface) 
         );
-
-        ERC20Interface = ERC20(0x042889b1484a7D36ed732f23f2E42a835e6bBBD1);
-
+        
         ERC20Interface.transfer(address(newLC), Amt);
 
         LCDoc.push(

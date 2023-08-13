@@ -1,195 +1,206 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Web3 from "web3";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Nav from "./components/Nav";
 import Description from "./components/Description";
 import Container from "./components/Container";
 import LCManager from "./contracts/LCManager";
 import LCabi from "./contracts/LCabi";
 
-class App extends Component {
-  constructor() {
-    super();
+function dateToTimestamp(dateInput) {
+  const [year, month, day] = dateInput
+    .split("-")
+    .map((num) => parseInt(num, 10));
+  const date = new Date(year, month - 1, day);
+  return Math.floor(date.getTime() / 1000);
+}
 
-    this.LCManager = LCManager;
-    this.LCabi = LCabi;
+const App = () => {
+  const LCManagerRef = LCManager;
+  const LCabiRef = LCabi;
+  const appName = "Bank";
 
-    this.appName = "Bank";
-    this.closeTab = this.closeTab.bind(this);
-    this.resetApp = this.resetApp.bind(this);
-    this.viewLC = this.viewLC.bind(this);
-    this.viewSingleLC = this.viewSingleLC.bind(this);
-    this.onInputChangeUpdateField = this.onInputChangeUpdateField.bind(this);
-    this.state = {
-      role: null,
-      option: null,
-      LCNew: [],
-      LC: [],
-      fields: {
-        BuyerAccount: null,
-        SellerAccount: null,
-        Amount: null,
-        DOExpiry: null,
-        DocHash: null,
-        LCNo: null,
-      },
-    };
-  }
+  const [state, setState] = useState({
+    role: null,
+    option: null,
+    LCNew: [],
+    LC: [],
+    fields: {
+      BuyerAccount: null,
+      SellerAccount: null,
+      Amount: null,
+      DOExpiry: null,
+      DocHash: null,
+      LCNo: null,
+    },
+    account: null,
+  });
 
-  BuyerSessionView = () => {
-    this.setState({
+  const web3Ref = useRef(null);
+
+  const initializeWeb3 = () => {
+    if (window.ethereum) {
+      const ethereum = window.ethereum;
+      web3Ref.current = new Web3(ethereum);
+      ethereum
+        .enable()
+        .then((accounts) => {
+          setAccount(accounts[0]);
+          web3Ref.current.eth.defaultAccount = accounts[0];
+        })
+        .catch((error) => {
+          console.error("Failed to enable ethereum", error);
+        });
+    }
+  };
+
+  const setAccount = (account) => {
+    setState((prevState) => ({ ...prevState, account }));
+  };
+
+  useEffect(initializeWeb3, []);
+
+  const BuyerSessionView = () => {
+    setState((prevState) => ({
+      ...prevState,
       role: "Buyer",
       option: "View",
-    });
-    this.viewLC();
+    }));
+    viewLC();
   };
 
-  BankSessionCreate = () => {
-    this.setState({
+  const BankSessionCreate = () => {
+    setState((prevState) => ({
+      ...prevState,
       role: "Bank",
       option: "Create",
-    });
+    }));
   };
 
-  BankSessionView = () => {
-    this.setState({
+  const BankSessionView = () => {
+    setState((prevState) => ({
+      ...prevState,
       role: "Bank",
       option: "View",
-    });
-    this.viewLC();
+    }));
+    viewLC();
   };
 
-  SellerSessionView = () => {
-    this.setState({
+  const SellerSessionView = () => {
+    setState((prevState) => ({
+      ...prevState,
       role: "Seller",
       option: "View",
-    });
-    this.viewLC();
+    }));
+    viewLC();
   };
 
-  SellerSessionVSettle = (LCNo) => {
-    this.setState({
+  const SellerSessionVSettle = (LCNo) => {
+    setState((prevState) => ({
+      ...prevState,
       role: "Seller",
       option: "Settle",
       fields: {
+        ...prevState.fields,
         LCNo: LCNo,
       },
-    });
+    }));
   };
 
-  SellerSessionSettle = () => {
-    this.setState({
+  const SellerSessionSettle = () => {
+    setState((prevState) => ({
+      ...prevState,
       role: "Seller",
       option: "Settle",
-    });
+    }));
   };
 
-  onInputChangeUpdateField = (name, value) => {
-    let fields = this.state.fields;
-
-    fields[name] = value;
-
-    this.setState({
-      fields,
-    });
-  };
-
-  closeTab = () => {
-    this.setState({
-      role: null,
-      option: null,
-      fields: {},
-    });
-  };
-
-  closeViewTab = () => {
-    this.setState({
-      option: "View",
-    });
-  };
-
-  resetApp = () => {
-    this.setState({
-      role: null,
-      option: null,
+  const onInputChangeUpdateField = (name, value) => {
+    setState((prevState) => ({
+      ...prevState,
       fields: {
-        BuyerAccount: null,
-        SellerAccount: null,
-        Amount: null,
-        DOExpiry: null,
-        DocHash: null,
-        LCNum: null,
+        ...prevState.fields,
+        [name]: value,
       },
-    });
-    window.location.reload();
+    }));
   };
 
-  createLC = () => {
-    let app = this;
-    var contract = new this.web3.eth.Contract(
-      this.LCManager.abi,
-      this.LCManager.address
+  const createLC = () => {
+    const { fields } = state;
+
+    var contract = new web3Ref.current.eth.Contract(
+      LCManagerRef.abi,
+      LCManagerRef.address
     );
 
-    let dateExpiry = this.state.fields.DOExpiry;
-    let year = dateExpiry.slice(0, 4);
-
-    let month = dateExpiry.slice(4, 6) - 1;
-    let day = dateExpiry.slice(6, 8);
-    var DateTemp = new Date(year, month, day, 23, 59, 59, 0);
-    var DOE = Math.floor(DateTemp.getTime() / 1000.0);
+    let dateExpiry = fields.DOExpiry;
+    const DOE = dateToTimestamp(dateExpiry);
 
     contract.methods
-      .createLC(
-        this.state.fields.BuyerAccount,
-        this.state.fields.SellerAccount,
-        this.state.fields.Amount,
-        DOE
-      )
-      .send({ from: app.web3.eth.defaultAccount })
+      .createLC(fields.BuyerAccount, fields.SellerAccount, fields.Amount, DOE)
+      .send({ from: web3Ref.current.eth.defaultAccount })
       .then(function (response) {
         if (response) {
-          console.log("LC No.");
-          console.log(response);
-          app.resetApp();
+          toast.success("LC successfully created!");
+          resetApp();
+        } else {
+          toast.error("Error creating LC. Please try again.");
         }
+      })
+      .catch(function (error) {
+        console.error("Error creating LC:", error);
+        toast.error("Error creating LC. Please try again.");
       });
   };
 
-  settleLC = () => {
-    let app = this;
-    var contractMaster = new this.web3.eth.Contract(
-      this.LCManager.abi,
-      this.LCManager.address
+  const settleLC = () => {
+    const { fields } = state;
+
+    const contractMaster = new web3Ref.current.eth.Contract(
+      LCManagerRef.abi,
+      LCManagerRef.address
     );
-    contractMaster.methods
-      .viewLC(app.state.fields.LCNo)
-      .call()
-      .then(function (response) {
-        if (response) {
-          let LCAddress = response[6];
 
-          var contractLC = new app.web3.eth.Contract(app.LCabi.abi, LCAddress);
-          contractLC.methods
-            .settleLC(app.state.fields.Amount, app.state.fields.DocHash)
-            .send({ from: app.web3.eth.defaultAccount })
-            .then(function (response) {
-              if (response) {
-                console.log(response);
-                app.resetApp;
-              }
-            });
+    contractMaster.methods
+      .viewLC(fields.LCNo)
+      .call()
+      .then((response) => {
+        if (response) {
+          const LCAddress = response[6];
+          const contractLC = new web3Ref.current.eth.Contract(
+            LCabiRef.abi,
+            LCAddress
+          );
+
+          return contractLC.methods
+            .settleLC(fields.Amount, fields.DocHash)
+            .send({ from: web3Ref.current.eth.defaultAccount });
+        } else {
+          throw new Error("LC not found");
         }
+      })
+      .then((response) => {
+        if (response) {
+          toast.success("LC successfully settled!");
+          resetApp();
+        } else {
+          toast.error("Error settling LC. Please try again.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error(
+          "Error settling LC. Please check the details and try again."
+        );
       });
   };
 
-  viewSingleLC = (LCAdd) => {
-    let app = this;
-    app.setState({
-      LC: [],
-    });
+  const viewSingleLC = (LCAdd) => {
+    let app = state;
+    setState((prevState) => ({ ...prevState, LC: [] }));
 
-    var contract = new this.web3.eth.Contract(this.LCabi.abi, LCAdd);
-
+    var contract = new web3Ref.current.eth.Contract(LCabiRef.abi, LCAdd);
     contract.methods
       .viewLCdetails()
       .call()
@@ -200,13 +211,12 @@ class App extends Component {
           let SellerAcc = response[2];
           let Amount = response[3];
           let IniAmount = response[4];
-          let Status = app.web3.utils.hexToAscii(response[5]);
+          let Status = web3Ref.current.utils.hexToAscii(response[5]);
           let DOI = response[6];
           let DOE = response[7];
           let DocHash = response[8];
 
-          let LC = app.state.LC;
-
+          let LC = app.LC;
           LC.push({
             LCNo,
             BuyerAcc,
@@ -219,21 +229,22 @@ class App extends Component {
             DocHash,
           });
 
-          app.setState({
+          setState((prevState) => ({
+            ...prevState,
             LC,
             option: "ViewSingleLC",
-          });
+          }));
         }
       });
   };
 
-  viewLC = () => {
-    let app = this;
+  const viewLC = () => {
+    let app = state;
     var lastLC;
 
-    var contract = new this.web3.eth.Contract(
-      this.LCManager.abi,
-      this.LCManager.address
+    var contract = new web3Ref.current.eth.Contract(
+      LCManagerRef.abi,
+      LCManagerRef.address
     );
     contract.methods
       .lengthLC()
@@ -243,10 +254,7 @@ class App extends Component {
           lastLC = response;
 
           if (lastLC > 1) {
-            app.setState({
-              LCNew: [],
-            });
-
+            setState((prevState) => ({ ...prevState, LCNew: [] }));
             for (let i = 1; i < lastLC; i++) {
               contract.methods
                 .viewLC(i)
@@ -257,13 +265,12 @@ class App extends Component {
                     let SAcc = response[0];
                     let BAcc = response[1];
                     let Amount = response[2];
-                    let Status = app.web3.utils.hexToAscii(response[3]);
+                    let Status = web3Ref.current.utils.hexToAscii(response[3]);
                     let DOI = response[4];
                     let DOE = response[5];
                     let LCAdd = response[6];
 
-                    let LCNew = app.state.LCNew;
-
+                    let LCNew = app.LCNew;
                     LCNew.push({
                       LCNo,
                       BAcc,
@@ -275,9 +282,10 @@ class App extends Component {
                       LCAdd,
                     });
 
-                    app.setState({
+                    setState((prevState) => ({
+                      ...prevState,
                       LCNew,
-                    });
+                    }));
                   }
                 });
             }
@@ -286,56 +294,65 @@ class App extends Component {
       });
   };
 
-  componentDidMount() {
-    var account;
+  const closeTab = () => {
+    setState((prevState) => ({
+      ...prevState,
+      role: null,
+      option: null,
+      fields: {},
+    }));
+  };
 
-    if (window.ethereum) {
-      const ethereum = window.ethereum;
-      window.web3 = new Web3(ethereum);
-      this.web3 = new Web3(ethereum);
+  const closeViewTab = () => {
+    setState((prevState) => ({
+      ...prevState,
+      option: "View",
+    }));
+  };
 
-      ethereum.enable().then((accounts) => {
-        this.web3.eth.defaultAccount = accounts[0];
-        account = accounts[0];
+  const resetApp = () => {
+    setState({
+      role: null,
+      option: null,
+      fields: {
+        BuyerAccount: null,
+        SellerAccount: null,
+        Amount: null,
+        DOExpiry: null,
+        DocHash: null,
+        LCNum: null,
+      },
+    });
+  };
 
-        let app = this;
-
-        this.setState({
-          account,
-        });
-      });
-    }
-  }
-
-  render() {
-    return (
-      <div>
-        <Nav appName={this.appName} />
-        <Description />
-        <Container
-          role={this.state.role}
-          option={this.state.option}
-          account={this.state.account}
-          LCNew={this.state.LCNew}
-          LC={this.state.LC}
-          viewLC={this.viewLC}
-          createLC={this.createLC}
-          settleLC={this.settleLC}
-          viewSingleLC={this.viewSingleLC}
-          BuyerSessionView={this.BuyerSessionView}
-          BankSessionCreate={this.BankSessionCreate}
-          BankSessionView={this.BankSessionView}
-          SellerSessionView={this.SellerSessionView}
-          SellerSessionSettle={this.SellerSessionSettle}
-          SellerSessionVSettle={this.SellerSessionVSettle}
-          onInputChangeUpdateField={this.onInputChangeUpdateField}
-          fields={this.state.fields}
-          closeTab={this.closeTab}
-          closeViewTab={this.closeViewTab}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <>
+      <Nav appName={appName} />
+      <Description />
+      <Container
+        role={state.role}
+        option={state.option}
+        account={state.account}
+        LCNew={state.LCNew}
+        LC={state.LC}
+        viewLC={viewLC}
+        createLC={createLC}
+        settleLC={settleLC}
+        viewSingleLC={viewSingleLC}
+        BuyerSessionView={BuyerSessionView}
+        BankSessionCreate={BankSessionCreate}
+        BankSessionView={BankSessionView}
+        SellerSessionView={SellerSessionView}
+        SellerSessionSettle={SellerSessionSettle}
+        SellerSessionVSettle={SellerSessionVSettle}
+        onInputChangeUpdateField={onInputChangeUpdateField}
+        fields={state.fields}
+        closeTab={closeTab}
+        closeViewTab={closeViewTab}
+      />
+      <ToastContainer />
+    </>
+  );
+};
 
 export default App;

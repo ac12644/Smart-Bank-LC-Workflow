@@ -108,6 +108,10 @@ export default {
           name: "bankadd",
           type: "address",
         },
+        {
+          name: "erc20Address",
+          type: "address",
+        },
       ],
       payable: false,
       stateMutability: "nonpayable",

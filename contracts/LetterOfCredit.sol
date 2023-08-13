@@ -30,7 +30,8 @@ contract LetterOfCredit {
         uint256 Amt,
         uint256 DOI,
         uint256 DOE,
-        address bankadd
+        address bankadd,
+        address erc20Address // USD ADDRESS
     ) public {
         bank = bankadd;
         LCnew.LCNo = LCNum;
@@ -43,7 +44,7 @@ contract LetterOfCredit {
         LCnew.DOExpiry = DOE;
         LCnew.DocHash = 0x0;
         LCM = LCManager(msg.sender);
-        ERC20Interface = ERC20(0x042889b1484a7D36ed732f23f2E42a835e6bBBD1);
+        ERC20Interface = ERC20(erc20Address);
     }
 
     modifier onlyAuth() {

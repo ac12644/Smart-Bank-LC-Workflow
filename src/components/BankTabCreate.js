@@ -51,7 +51,8 @@ function BankTabCreate(props) {
             onInputChangeUpdateField={props.onInputChangeUpdateField}
             fields={props.fields}
             name="DOExpiry"
-            placeholder="Date of Expiry (YYYYMMDD)"
+            placeholder="Date of Expiry"
+            type="date"
           />
         </div>
       </div>

@@ -1,5 +1,5 @@
 export default {
-  address: "0xe8Cf87aA003b0870d4393D3C18C04A96d7B42dA5",
+  address: "0x4Bd0C38C7Ca73d77EB18dA7C2De1c8b0C02dB780", // LC MANAGER ADDRESS
   abi: [
     {
       constant: true,
@@ -126,7 +126,12 @@ export default {
       type: "function",
     },
     {
-      inputs: [],
+      inputs: [
+        {
+          name: "_erc20Address",
+          type: "address",
+        },
+      ],
       payable: true,
       stateMutability: "payable",
       type: "constructor",

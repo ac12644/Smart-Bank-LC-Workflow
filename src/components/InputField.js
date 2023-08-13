@@ -18,7 +18,7 @@ function InputField(props) {
           onInput={handleChange}
           placeholder={placeholder}
           className="input"
-          type="text"
+          type={props.type || "text"}
         ></input>
       </p>
       <p className="control">
